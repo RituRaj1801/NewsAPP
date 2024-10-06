@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import Newsitem from './Newsitem'
 import ApiResponse from './sampleJSON.json'
+import UnableToProcess from './UnableToProcess'
 import Loader from './Loader';
-
 
 
 export default class News extends Component {
@@ -29,12 +29,25 @@ export default class News extends Component {
         let url = `https://newsapi.org/v2/top-headlines?country=us&category=${this.props.category}&apikey=${this.apiKEY}&page=${page}&pageSize=${this.pageSize}`
         let data = await fetch(url)
         let parsedData = await data.json()
+        if(parsedData.status==='ok'){
+            this.setState({
+                error :false,
+                status:parsedData.status,
+                totalResults: parsedData.totalResults,
+                loader:false,
+                articles: parsedData.articles,
+            })
+        }else{
+            this.setState({
+                error :true,
+                // status:parsedData.status,
+                // totalResults: parsedData.totalResults,
+                loader:false,
+                // articles: parsedData.articles,
+            })
+        }
 
-        this.setState({
-            totalResults: parsedData.totalResults,
-            loader:false,
-            articles: parsedData.articles,
-        })
+       
     }
 
     handleClick= async (direction)=>{
@@ -53,15 +66,16 @@ export default class News extends Component {
 
         return (
             <div>
-            {console.log(this.apiKEY)}
-                <h3>Top Headline-{this.props.category}</h3>
+               { !this.state.error  && <h3>Top Headline-{this.props.category}</h3>}
                 {this.state.loader && <Loader />}
+                {this.state.error  && <UnableToProcess/> }
                 <div className="row justify-content-evenly">
-                    { !this.state.loader &&  articles.map((article, index) => (
+                    { !this.state.loader && !this.state.error && articles.map((article, index) => (
                         <Newsitem key={index} title={article.title ? article.title : "NO TITLE"} description={article.description ? article.description : "NO DESCRIPTION"} imgURL={article.urlToImage} readMore={article.url} author={article.author} date={article.publishedAt.split('T')[0]} source={article.source.name} />
-                    ))}
+                    ))
+                    }
                 </div>
-                <div className="conta d-flex justify-content-around">
+                { !this.state.error  && <div className="conta d-flex justify-content-around">
                     <button
                         className="btn btn-success"
                         onClick={()=>this.handleClick(-1)}
@@ -77,7 +91,7 @@ export default class News extends Component {
                     >
                         Next &rarr;
                     </button>
-                </div>
+                </div>}
             </div>
         )
     }
