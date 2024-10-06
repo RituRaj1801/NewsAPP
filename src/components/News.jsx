@@ -8,7 +8,7 @@ import Loader from './Loader';
 export default class News extends Component {
     
     pageSize=15;
-    apiKEY=process.env.REACT_APP_NEWS_API_KEY  
+    apiKEY="9a54db73614b470ca508c57ac92c3bd3"
     constructor() {
         super();
         this.state = {
