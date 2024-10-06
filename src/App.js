@@ -1,13 +1,14 @@
 import './App.css';
 import React, { Component } from 'react'
 import Navbar from './components/Navbar';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import News from './components/News';
 
 export default class App extends Component {
     render() {
         return (
+            
             <Router>
                 <Navbar />
                 <div className="container">

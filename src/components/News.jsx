@@ -2,14 +2,13 @@ import React, { Component } from 'react'
 import Newsitem from './Newsitem'
 import ApiResponse from './sampleJSON.json'
 import Loader from './Loader';
-import config from '../config'
 
 
 
 export default class News extends Component {
     
     pageSize=15;
-    apiKEY=config.NEWS_API_KEY3   
+    apiKEY=process.env.REACT_APP_NEWS_API_KEY  
     constructor() {
         super();
         this.state = {
