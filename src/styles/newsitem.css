@@ -1,0 +1,7 @@
+.img-custom {
+    width: 262px; /* Fixed width */
+    height: auto; /* Maintain aspect ratio */
+    aspect-ratio: 16 / 9; /* Ensure 16:9 aspect ratio */
+    object-fit: cover; /* Ensure the image covers the entire space */
+  }
+  

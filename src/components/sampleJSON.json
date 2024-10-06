@@ -69,6 +69,19 @@
       },
       {
         "source": {
+          "id": "cnn",
+          "name": "CNN"
+        },
+        "author": "Mitchell McCluskey",
+        "title": "Gang attack in Haiti kills 70 people including infants - CNN",
+        "description": "Scores of people including three infants were killed in a gang attack in central Haiti, the United Nations Human Rights Office said in a statement on Friday.",
+        "url": "https://www.cnn.com/2024/10/04/americas/haiti-gang-attack-intl-latam/index.html",
+        "urlToImage": "https://media.cnn.com/api/v1/images/stellar/prod/screen-shot-2024-10-04-at-5-04-38-pm.jpg?c=16x9&q=w_800,c_fill",
+        "publishedAt": "2024-10-05T02:51:00Z",
+        "content": "Scores of people including three infants were killed in a gang attack in central Haiti, the United Nations Human Rights Office said in a statement on Friday.\r\nMembers of the Gran Grif gang used autom… [+2478 chars]"
+      },
+      {
+        "source": {
           "id": "the-washington-post",
           "name": "The Washington Post"
         },
