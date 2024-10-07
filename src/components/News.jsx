@@ -29,6 +29,8 @@ export default class News extends Component {
         let url = `https://newsapi.org/v2/top-headlines?country=us&category=${this.props.category}&apikey=${this.apiKEY}&page=${page}&pageSize=${this.pageSize}`
         let data = await fetch(url)
         let parsedData = await data.json()
+        console.log("parsed data")
+        console.log(parsedData)
         if(parsedData.status==='ok'){
             this.setState({
                 error :false,
