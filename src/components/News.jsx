@@ -23,31 +23,35 @@ export default class News extends Component {
     }
 
     fetchNews = async (page) => {
-        this.setState({
-            loader:true
-        })
-        let url = `https://newsapi.org/v2/top-headlines?country=us&category=${this.props.category}&apikey=${this.apiKEY}&page=${page}&pageSize=${this.pageSize}`
-        let data = await fetch(url)
-        let parsedData = await data.json()
-        console.log("parsed data")
+        let url="https://newsdata.io/api/1/latest?apikey=pub_555041064c10fd22abc3571787f84c8e173cf&q=pizza"
+        let data=await fetch(url);
+        let parsedData=await data.json()
         console.log(parsedData)
-        if(parsedData.status==='ok'){
-            this.setState({
-                error :false,
-                status:parsedData.status,
-                totalResults: parsedData.totalResults,
-                loader:false,
-                articles: parsedData.articles,
-            })
-        }else{
-            this.setState({
-                error :true,
-                // status:parsedData.status,
-                // totalResults: parsedData.totalResults,
-                loader:false,
-                // articles: parsedData.articles,
-            })
-        }
+        // this.setState({
+        //     loader:true
+        // })
+        // let url = `https://newsapi.org/v2/top-headlines?country=us&category=${this.props.category}&apikey=${this.apiKEY}&page=${page}&pageSize=${this.pageSize}`
+        // let data = await fetch(url)
+        // let parsedData = await data.json()
+        // console.log("parsed data")
+        // console.log(parsedData)
+        // if(parsedData.status==='ok'){
+        //     this.setState({
+        //         error :false,
+        //         status:parsedData.status,
+        //         totalResults: parsedData.totalResults,
+        //         loader:false,
+        //         articles: parsedData.articles,
+        //     })
+        // }else{
+        //     this.setState({
+        //         error :true,
+        //         // status:parsedData.status,
+        //         // totalResults: parsedData.totalResults,
+        //         loader:false,
+        //         // articles: parsedData.articles,
+        //     })
+        // }
 
        
     }
@@ -67,7 +71,7 @@ export default class News extends Component {
 
         return (
             <div>
-               { !this.state.error  && <h3 className='text-center'>Top Headline-{this.props.category}</h3>}
+               {/* { !this.state.error  && <h3 className='text-center'>Top Headline-{this.props.category}</h3>}
                 {this.state.loader && <Loader />}
                 {this.state.error  && <UnableToProcess/> }
                 <div className="row justify-content-evenly">
@@ -92,7 +96,7 @@ export default class News extends Component {
                     >
                         Next &rarr;
                     </button>
-                </div>}
+                </div>} */}
             </div>
         )
     }
