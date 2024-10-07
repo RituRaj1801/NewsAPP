@@ -8,7 +8,7 @@ import Loader from './Loader';
 export default class News extends Component {
     
     pageSize=15;
-    apiKEY="9a54db73614b470ca508c57ac92c3bd3"
+    apiKEY=process.env.REACT_APP_NEWS_API_KEY
     constructor() {
         super();
         this.state = {
@@ -63,11 +63,11 @@ export default class News extends Component {
 
     render() {
         const { page, articles, totalResults } = this.state;
-        const totalPages = Math.ceil(totalResults / 9); // Calculate the total number of pages
+        const totalPages = Math.ceil(totalResults / this.pageSize); // Calculate the total number of pages
 
         return (
             <div>
-               { !this.state.error  && <h3>Top Headline-{this.props.category}</h3>}
+               { !this.state.error  && <h3 className='text-center'>Top Headline-{this.props.category}</h3>}
                 {this.state.loader && <Loader />}
                 {this.state.error  && <UnableToProcess/> }
                 <div className="row justify-content-evenly">

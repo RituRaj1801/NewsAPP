@@ -13,13 +13,13 @@ export default class App extends Component {
                 <Navbar />
                 <div className="container">
                     <Routes>
-                        <Route path='/' element={<News key='general'  category="general" />}></Route>
-                        <Route path='/business' element={<News key='business'  category="business" />}></Route>
-                        <Route path='/entertainment' element={<News  key='entertainment' category="entertainment" />}></Route>
-                        <Route path='/health' element={<News key='health'  category="health" />}></Route>
-                        <Route path='/science' element={<News  key='science' category="science" />}></Route>
-                        <Route path='/sports' element={<News key='sports'  category="sports" />}></Route>
-                        <Route path='/technology' element={<News  key='technology' category="technology" />}></Route>
+                        <Route path='/' element={<News key='General'  category="General" />}></Route>
+                        <Route path='/business' element={<News key='Business'  category="Business" />}></Route>
+                        <Route path='/entertainment' element={<News  key='Entertainment' category="Entertainment" />}></Route>
+                        <Route path='/health' element={<News key='Health'  category="Health" />}></Route>
+                        <Route path='/science' element={<News  key='Science' category="Science" />}></Route>
+                        <Route path='/sports' element={<News key='Sports'  category="Sports" />}></Route>
+                        <Route path='/technology' element={<News  key='Technology' category="Technology" />}></Route>
                     </Routes>
                 </div>
             </Router>
