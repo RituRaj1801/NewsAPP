@@ -51,7 +51,6 @@ export default class News extends Component {
     }
 
     handleClick= async (direction)=>{
-        console.log(this.state.page)
         let newPage=this.state.page+direction
         await this.fetchNews(newPage)
         this.setState({
