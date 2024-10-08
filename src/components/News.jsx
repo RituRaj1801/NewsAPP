@@ -78,7 +78,6 @@ export default class News extends Component {
 
         return (
             <div>
-            <p>hello</p>
                 {!this.state.error && <h3 className='text-center'>Top Headline-{this.props.category}</h3>}
                 {this.state.loader && <Loader />}
                 {this.state.error && <UnableToProcess />}
