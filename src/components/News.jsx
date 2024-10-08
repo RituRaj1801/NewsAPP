@@ -1,115 +1,142 @@
-import React, { Component } from 'react'
-import Newsitem from './Newsitem'
-// import ApiResponse from './sampleJSON.json'
-import UnableToProcess from './UnableToProcess'
+import React, { useCallback, useEffect, useState } from 'react';
+import Newsitem from './Newsitem';
+import UnableToProcess from './UnableToProcess';
 import Loader from './Loader';
 
+export default function News(props) {
+    const pageSize = 9;
+    const API_KEY = process.env.REACT_APP_NEWS_API_KEY;
 
-export default class News extends Component {
+    // State initialization
+    const [state, setState] = useState({
+        pageList: [],
+        articles: [],
+        page: 1,
+        totalResults: 0,
+        loader: true,
+        error: false,
+        country: props.country,  // Initialize country
+    });
 
-    pageSize = 9;
-    API_KEY = process.env.REACT_APP_NEWS_API_KEY
-    constructor() {
-        super();
-        this.state = {
-            pageList: [],
-            articles:[],
-            page: 1, // Initialize page number
-            totalResults: 0, // To store the total number of articles
-            loader: true
-        }
-    }
-    async componentDidMount() {
-        await this.fetchNews(0, "next")
-    }
-    async componentDidUpdate(prevProps){
-        if (prevProps.country!==this.props.country)
-            await this.fetchNews(0,"newCountry")
-        else if(prevProps.query!==this.props.query){
-            await this.fetchNews(0,"newQuery")
-        }
-    }
 
-    fetchNews = async (page, direction) => {
-        var url = `https://newsdata.io/api/1/latest?apikey=${this.API_KEY}&category=${this.props.category}&size=9&country=${this.props.country}&removeduplicate=1${page > 0 ? `&page=${page}` : ''}`;
-        if(direction==='newCountry' || direction==='newQuery'){
-            this.setState( {
+
+    // Fetch news based on given parameters
+    const fetchNews = useCallback(async (page, direction) => {
+        let url = `https://newsdata.io/api/1/latest?apikey=${API_KEY}&category=${props.category}&size=9&country=${props.country}&removeduplicate=1${page > 0 ? `&page=${page}` : ''}`;
+
+        // Reset state for new country or query
+        if (direction === 'newCountry' || direction === 'newQuery') {
+            setState({
                 pageList: [],
                 articles: [],
                 page: 1, // Initialize page number
-                totalResults: 0, // To store the total number of articles
-                loader: true
-            })
+                totalResults: 0,
+                loader: true,
+                error: false,
+                country: props.country, // Reset country in state
+            });
         }
-        if(direction==='newQuery')
-             url=`https://newsdata.io/api/1/latest?apikey=${this.API_KEY}&q=${this.props.query}&size=9`
-        // const url = "http://localhost/newAPI/news.php"
 
-        this.setState({
-            loader: true
-        })
-        const response = await fetch(url, {
-            method: 'GET',
-        });
-        var parsedData = await response.json()
-        console.log("parsed data ", parsedData)
+        // Change URL if new query
+        if (direction === 'newQuery') {
+            url = `https://newsdata.io/api/1/latest?apikey=${API_KEY}&q=${props.query}&size=9`;
+        }
 
+        // Set loader to true before fetching
+        setState((prevState) => ({
+            ...prevState,
+            loader: true,
+        }));
 
+        const response = await fetch(url);
+        const parsedData = await response.json();
+        console.log("parsed data ", parsedData);
+
+        // Update state based on fetch results
         if (parsedData.status === 'success') {
-            this.setState({
-                pageList: (direction === "next"  || direction==="newCountry") ? (!this.state.pageList.includes(parsedData.nextPage) ? [...this.state.pageList, parsedData.nextPage] : [...this.state.pageList]) : [...this.state.pageList],
+            setState((prevState) => ({
+                ...prevState,
+                pageList: (direction === "next" || direction === "newCountry") ?
+                    (!prevState.pageList.includes(parsedData.nextPage) ?
+                        [...prevState.pageList, parsedData.nextPage] :
+                        [...prevState.pageList]) :
+                    [...prevState.pageList],
                 error: false,
                 status: parsedData.status,
                 totalResults: parsedData.totalResults,
                 loader: false,
                 articles: parsedData.results,
-            })
+            }));
         } else {
-            this.setState({
+            setState((prevState) => ({
+                ...prevState,
                 error: true,
                 loader: false,
-            })
+            }));
         }
-    }
+    }, [API_KEY, props.category, props.country, props.query]); // Include all dependencies
 
-    handleClick = async (direction) => {
-        const { page, pageList } = this.state;
+    const handleClick = async (direction) => {
+        const { page, pageList } = state;
         let newPage = page + direction; // Calculate new page
 
         if (direction === 1) {
-            await this.fetchNews(pageList[newPage - 2], "next")
-        }
-        else {
+            await fetchNews(pageList[newPage - 2], "next");
+        } else {
             if (newPage === 1)
-                await this.fetchNews(0, "prev")
+                await fetchNews(0, "prev");
             else
-                await this.fetchNews(pageList[page - 3], "prev")
+                await fetchNews(pageList[page - 3], "prev");
         }
-        this.setState({
-            page: newPage
-        })
-    }
 
+        setState((prevState) => ({
+            ...prevState,
+            page: newPage,
+        }));
+    };
 
-    render() {
-        const { page, articles, totalResults } = this.state;
-        const totalPages = Math.ceil(totalResults / this.pageSize); // Calculate the total number of pages
+    // Fetch news on mount
+    useEffect(() => {
+        fetchNews(0, "next");
+    }, [fetchNews]); // Runs only once when the component mounts
 
-        return (
-            <div>
-                {!this.state.error && <h3 className='text-center'>Top Headline-{this.props.category}</h3>}
-                {this.state.loader && <Loader />}
-                {this.state.error && <UnableToProcess />}
-                <div className="row justify-content-evenly">
-                    {!this.state.loader && !this.state.error && articles.map((article, index) => (
-                        <Newsitem key={index} title={article.title ? article.title : "NO TITLE"} description={article.description ? article.description : "NO DESCRIPTION"} imgURL={article.image_url} readMore={article.source_url} date={article.pubDate.split(' ')[0]} source={article.source_name} />
-                    ))
-                    }
-                </div>
-                {!this.state.error && <div className="conta d-flex justify-content-around">
+    // Check for prop changes and refetch news if necessary
+    useEffect(() => {
+        fetchNews(0, props.country !== state.country ? "newCountry" : "newQuery");
+        // Update country in state if it has changed
+        setState((prevState) => ({
+            ...prevState,
+            country: props.country,
+        }));
+    }, [props.country, props.query, fetchNews, state.country]);
+
+    const { page, articles, totalResults, loader, error } = state;
+    const totalPages = Math.ceil(totalResults / pageSize); // Calculate the total number of pages
+
+    return (
+        <div>
+            {!error && <h3 className='text-center'>Top Headline - {props.category}</h3>}
+            {loader && <Loader />}
+            {error && <UnableToProcess />}
+            <div className="row justify-content-evenly">
+                {!loader && !error && articles.map((article, index) => (
+                    <Newsitem
+                        key={index}
+                        title={article.title ? article.title : "NO TITLE"}
+                        description={article.description ? article.description : "NO DESCRIPTION"}
+                        imgURL={article.image_url}
+                        readMore={article.source_url}
+                        date={article.pubDate.replace('T', ' ')}
+                        source={article.source_name}
+                    />
+                ))}
+
+            </div>
+            {!error && (
+                <div className="conta d-flex justify-content-around">
                     <button
                         className="btn btn-success"
-                        onClick={() => this.handleClick(-1)}
+                        onClick={() => handleClick(-1)}
                         disabled={page <= 1} // Disable when on the first page
                     >
                         &larr; Previous
@@ -117,13 +144,13 @@ export default class News extends Component {
 
                     <button
                         className="btn btn-success"
-                        onClick={() => this.handleClick(1)}
+                        onClick={() => handleClick(1)}
                         disabled={page >= totalPages} // Disable when there are no more pages
                     >
                         Next &rarr;
                     </button>
-                </div>}
-            </div>
-        )
-    }
+                </div>
+            )}
+        </div>
+    );
 }

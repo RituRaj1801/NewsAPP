@@ -1,36 +1,23 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import ReactFlagsSelect from "react-flags-select";
 import '../styles/Country.css'
-export default class Country extends Component {
-  constructor() {
-    super();
-    this.state = {
-      selected: "IN" // Initialize state
-    };
-  }
-  country =(code)=>{
-   this.setState({
-    selected:code
-   })
-   this.props.countryCode(code)
-  }
+export default function Country(props) {
+    const [state, setState] = useState({ selected: "IN" });
 
-
-  
-  render() {
-      return (<>
-
-      <ReactFlagsSelect
-        selected={this.state.selected} // Use class component state
-        onSelect={this.country} // Pass the function reference
-        // searchable
-        searchPlaceholder="Search countries"
-        optionsSize={14}
-        className="menu-flags"
-
-        // className='form-control me-2 mx-1'
-      />
-      </>
+    const country = (code) => {
+        setState({
+            selected: code
+        })
+        props.countryCode(code)
+    }
+    return (
+        <ReactFlagsSelect
+            selected={state.selected} // Use class component state
+            onSelect={country} // Pass the function reference
+            // searchable
+            searchPlaceholder="Search countries"
+            optionsSize={14}
+            className="menu-flags"
+        />
     );
-  }
 }
