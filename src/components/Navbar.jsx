@@ -1,11 +1,20 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import Country from './Country';
 
 export default class Navbar extends Component {
     categories = [
         "crime", "domestic", "education", "environment", "food", "lifestyle", "politics", "top", "tourism", "world",
         "other"
     ];
+    querySearchFun=(event)=>{
+        event.preventDefault(); // Prevent the default form submission behavior
+
+    // Extract the value from the input field
+    const keyword = event.target.elements[0].value; // or use a ref for input
+    this.props.querySearch(keyword)
+
+    }
     render() {
         return (
             <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -34,10 +43,6 @@ export default class Navbar extends Component {
                             <li className="nav-item">
                                 <Link className="nav-link" aria-current="page" to="/technology">Technology</Link>
                             </li>
-
-
-
-
                             <li className="nav-item dropdown">
                                 <Link className="nav-link dropdown-toggle" to="/" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     More
@@ -52,10 +57,11 @@ export default class Navbar extends Component {
                                     ))}
                                 </ul>
                             </li>
+                        <Country countryCode={this.props.countryCode}/>
                         </ul>
-                        <form className="d-flex" role="search">
-                            <input className="form-control me-2" type="search" placeholder="Enter one KeyWord" aria-label="Search" />
-                            <button className="btn btn-outline-success" type="submit">Search</button>
+                        <form className="d-flex" role="search" onSubmit={this.querySearchFun}>
+                            <input className="form-control me-2 mx-1" type="search" placeholder="Enter one KeyWord" aria-label="Search" />
+                            <button className="btn btn-outline-success" type="submit" >Search</button>
                         </form>
                     </div>
                 </div>
