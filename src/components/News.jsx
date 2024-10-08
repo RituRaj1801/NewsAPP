@@ -20,7 +20,6 @@ export default class News extends Component {
         }
     }
     async componentDidMount() {
-        console.log("cmp called")
         await this.fetchNews(0, "next")
     }
     async componentDidUpdate(prevProps){
@@ -98,7 +97,6 @@ export default class News extends Component {
 
         return (
             <div>
-            {console.log("component called")}
                 {!this.state.error && <h3 className='text-center'>Top Headline-{this.props.category}</h3>}
                 {this.state.loader && <Loader />}
                 {this.state.error && <UnableToProcess />}

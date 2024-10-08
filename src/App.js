@@ -22,7 +22,7 @@ export default class App extends Component {
         })
     }
     querySearch=(query)=>{
-       console.log(query)
+      
         this.setState({
             country:this.state.country,
             query:query
