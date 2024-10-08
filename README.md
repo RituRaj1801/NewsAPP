@@ -68,3 +68,18 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+## Setting Up the API Key
+
+To securely use your API key in this project, follow these steps:
+
+1. **Create a `.env` File**:
+   In the root of your project directory, create a file named `.env`.
+
+2. **Add Your API Key**:
+   Open the `.env` file and add your API key in the following format:
+
+   ```plaintext
+   REACT_APP_NEWS_API_KEY=your_actual_api_key
+Replace your_actual_api_key with your actual API key.
