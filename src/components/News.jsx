@@ -6,61 +6,68 @@ import Loader from './Loader';
 
 
 export default class News extends Component {
-    
-    pageSize=15;
-    apiKEY=process.env.REACT_APP_NEWS_API_KEY
+
+    pageSize = 9;
+    API_KEY = process.env.REACT_APP_NEWS_API_KEY
     constructor() {
         super();
         this.state = {
-            articles:ApiResponse.articles,
+            pageList: [],
+            articles: ApiResponse.articles,
             page: 1, // Initialize page number
             totalResults: 0, // To store the total number of articles
             loader: true
         }
     }
     async componentDidMount() {
-        await this.fetchNews(1)
+        await this.fetchNews(0, "next")
     }
 
-    fetchNews = async (page) => {
-        let url="https://newsdata.io/api/1/latest?apikey=pub_555041064c10fd22abc3571787f84c8e173cf&q=pizza"
-        let data=await fetch(url);
-        let parsedData=await data.json()
-        console.log(parsedData)
-        // this.setState({
-        //     loader:true
-        // })
-        // let url = `https://newsapi.org/v2/top-headlines?country=us&category=${this.props.category}&apikey=${this.apiKEY}&page=${page}&pageSize=${this.pageSize}`
-        // let data = await fetch(url)
-        // let parsedData = await data.json()
-        // console.log("parsed data")
-        // console.log(parsedData)
-        // if(parsedData.status==='ok'){
-        //     this.setState({
-        //         error :false,
-        //         status:parsedData.status,
-        //         totalResults: parsedData.totalResults,
-        //         loader:false,
-        //         articles: parsedData.articles,
-        //     })
-        // }else{
-        //     this.setState({
-        //         error :true,
-        //         // status:parsedData.status,
-        //         // totalResults: parsedData.totalResults,
-        //         loader:false,
-        //         // articles: parsedData.articles,
-        //     })
-        // }
+    fetchNews = async (page, direction) => {
+        const url = `https://newsdata.io/api/1/latest?apikey=${this.API_KEY}&category=${this.props.category}&size=9&removeduplicate=1${page > 0 ? `&page=${page}` : ''}`;
 
-       
-    }
-
-    handleClick= async (direction)=>{
-        let newPage=this.state.page+direction
-        await this.fetchNews(newPage)
         this.setState({
-            page:newPage
+            loader: true
+        })
+        const response = await fetch(url, {
+            method: 'GET',
+        });
+        var parsedData = await response.json()
+        console.log("parsed data ", parsedData)
+
+
+        if (parsedData.status === 'success') {
+            this.setState({
+                pageList: direction === "next" ? (!this.state.pageList.includes(parsedData.nextPage) ? [...this.state.pageList, parsedData.nextPage] : [...this.state.pageList]) : [...this.state.pageList],
+                error: false,
+                status: parsedData.status,
+                totalResults: parsedData.totalResults,
+                loader: false,
+                articles: parsedData.results,
+            })
+        } else {
+            this.setState({
+                error: true,
+                loader: false,
+            })
+        }
+    }
+
+    handleClick = async (direction) => {
+        const { page, pageList } = this.state;
+        let newPage = page + direction; // Calculate new page
+
+        if(direction===1){
+            await this.fetchNews(pageList[newPage - 2], "next")
+        }
+        else{
+            if (newPage === 1)
+                await this.fetchNews(0, "prev")
+            else
+                await this.fetchNews(pageList[page - 3], "prev")
+        }
+        this.setState({
+            page: newPage
         })
     }
     
@@ -71,19 +78,19 @@ export default class News extends Component {
 
         return (
             <div>
-               {/* { !this.state.error  && <h3 className='text-center'>Top Headline-{this.props.category}</h3>}
+                {!this.state.error && <h3 className='text-center'>Top Headline-{this.props.category}</h3>}
                 {this.state.loader && <Loader />}
-                {this.state.error  && <UnableToProcess/> }
+                {this.state.error && <UnableToProcess />}
                 <div className="row justify-content-evenly">
-                    { !this.state.loader && !this.state.error && articles.map((article, index) => (
-                        <Newsitem key={index} title={article.title ? article.title : "NO TITLE"} description={article.description ? article.description : "NO DESCRIPTION"} imgURL={article.urlToImage} readMore={article.url} author={article.author} date={article.publishedAt.split('T')[0]} source={article.source.name} />
+                    {!this.state.loader && !this.state.error && articles.map((article, index) => (
+                        <Newsitem key={index} title={article.title ? article.title : "NO TITLE"} description={article.description ? article.description : "NO DESCRIPTION"} imgURL={article.image_url} readMore={article.source_url} date={article.pubDate.split(' ')[0]} source={article.source_name} />
                     ))
                     }
                 </div>
-                { !this.state.error  && <div className="conta d-flex justify-content-around">
+                {!this.state.error && <div className="conta d-flex justify-content-around">
                     <button
                         className="btn btn-success"
-                        onClick={()=>this.handleClick(-1)}
+                        onClick={() => this.handleClick(-1)}
                         disabled={page <= 1} // Disable when on the first page
                     >
                         &larr; Previous
@@ -91,12 +98,12 @@ export default class News extends Component {
 
                     <button
                         className="btn btn-success"
-                        onClick={()=>this.handleClick(1)}
+                        onClick={() => this.handleClick(1)}
                         disabled={page >= totalPages} // Disable when there are no more pages
                     >
                         Next &rarr;
                     </button>
-                </div>} */}
+                </div>}
             </div>
         )
     }

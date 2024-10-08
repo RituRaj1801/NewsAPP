@@ -1,7 +1,11 @@
 import React, { Component } from 'react'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 export default class Navbar extends Component {
+    categories = [
+        "crime", "domestic", "education", "environment", "food", "lifestyle", "politics", "top", "tourism", "world",
+        "other"
+    ];
     render() {
         return (
             <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -11,7 +15,7 @@ export default class Navbar extends Component {
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul className="navbar-nav me-auto mb-2 mb-lg-0">      
+                        <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                             <li className="nav-item">
                                 <Link className="nav-link" aria-current="page" to="/business">Business</Link>
                             </li>
@@ -31,17 +35,23 @@ export default class Navbar extends Component {
                                 <Link className="nav-link" aria-current="page" to="/technology">Technology</Link>
                             </li>
 
-                            {/* <li className="nav-item dropdown">
+
+
+
+                            <li className="nav-item dropdown">
                                 <Link className="nav-link dropdown-toggle" to="/" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Dropdown
+                                    More
                                 </Link>
                                 <ul className="dropdown-menu">
-                                    <li><Link className="dropdown-item" to="/">Action</Link></li>
-                                    <li><Link className="dropdown-item" to="/">Another action</Link></li>
-                                    <li><hr className="dropdown-divider" /></li>
-                                    <li><Link className="dropdown-item" to="/">Something else here</Link></li>
+                                    {this.categories.map((category, index) => (
+                                        <li key={index} className="nav-item">
+                                            <Link className="nav-link" aria-current="page" to={`/${category}`}>
+                                                {category.charAt(0).toUpperCase() + category.slice(1)} 
+                                            </Link>
+                                        </li>
+                                    ))}
                                 </ul>
-                            </li> */}
+                            </li>
                         </ul>
                         <form className="d-flex" role="search">
                             <input className="form-control me-2" type="search" placeholder="Enter one KeyWord" aria-label="Search" />
