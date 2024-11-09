@@ -109,6 +109,7 @@ export default function News(props) {
             country: props.country,
         }));
     }, [props.country, props.query, fetchNews, state.country]);
+    
 
     const { page, articles, totalResults, loader, error } = state;
     const totalPages = Math.ceil(totalResults / pageSize); // Calculate the total number of pages

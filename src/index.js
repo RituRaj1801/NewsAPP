@@ -3,15 +3,15 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import Firebase from './components/Firebase';
-import NewsForm from './components/NewsFrom';
+// import Firebase from './components/Firebase';
+// import NewsForm from './components/NewsFrom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
 
-  <NewsForm/>
+  // <NewsForm/>
 
-  // <App/>
+  <App/>
   // <React.StrictMode>
   //   <App />
   // </React.StrictMode>
